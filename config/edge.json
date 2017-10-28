@@ -1,0 +1,67 @@
+{
+    "version": "1.0",
+    "envConfig": {
+        "test": {
+            "targetServers": [
+                {
+                    "name": "demo-target",
+                    "host": "httpbin.org",
+                    "isEnabled": true,
+                    "port": 80,
+                    "sSLInfo": {
+                        "enabled": "true",
+                        "clientAuthEnabled": "false",
+                        "ignoreValidationErrors": "false"
+                    }
+                }
+            ],
+            "kvms": [
+                {
+                    "name": "httpbin",
+                    "encrypted": "true",
+                    "entry": [
+                        { "name": "username", "value": "admin" },
+                        { "name": "password", "value": "secret" }
+                    ]
+                }
+            ]
+        }
+    },
+    "orgConfig": {
+        "apiProducts": [
+            { 
+                "name": "demo-product", 
+                "displayName": "Demo Product", 
+                "description": "Demo Product",
+                "apiResources": [ "/" ],
+                "approvalType": "auto",
+                "attributes": [],
+                "environments": [ "test", "prod" ],
+                "proxies": [ "apibin-v1" ],
+                "quota": "",
+                "quotaInterval": "",
+                "quotaTimeUnit": "",
+                "scopes": []
+            }
+        ],
+        "developers": [
+            {
+                "attributes": [],
+                "email": "dev@demo.com",
+                "firstName": "Demo",
+                "lastName": "Developer",
+                "userName": "demodev"
+            }
+        ],
+        "developerApps": {
+            "dev@demo.com": [
+                {
+                    "name": "demo-app",
+                    "apiProducts": [ "demo-product" ],
+                    "callbackUrl": "https://google.com",
+                    "scopes": []
+                }
+            ]
+        }
+    }
+}

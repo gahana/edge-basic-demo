@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<BasicAuthentication async="false" continueOnError="false" enabled="true" name="BA-TargetAuthN">
+    <DisplayName>BA-TargetAuthN</DisplayName>
+    <Operation>Encode</Operation>
+    <IgnoreUnresolvedVariables>false</IgnoreUnresolvedVariables>
+    <User ref="private.creds.username"/>
+    <Password ref="private.creds.password"/>
+    <AssignTo createNew="false">request.header.Authorization</AssignTo>
+</BasicAuthentication>

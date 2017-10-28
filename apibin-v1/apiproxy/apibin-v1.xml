@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<APIProxy revision="3" name="apibin-v1">
+    <Basepaths>/v1/apibin</Basepaths>
+    <ConfigurationVersion majorVersion="4" minorVersion="0"/>
+    <CreatedAt>1509198882813</CreatedAt>
+    <CreatedBy>ssudhindra@google.com</CreatedBy>
+    <Description></Description>
+    <DisplayName>apibin-v1</DisplayName>
+    <LastModifiedAt>1509200416644</LastModifiedAt>
+    <LastModifiedBy>ssudhindra@google.com</LastModifiedBy>
+    <Policies>
+        <Policy>BA-TargetAuthN</Policy>
+        <Policy>JS-TargetPath</Policy>
+        <Policy>JX-GetInXML</Policy>
+        <Policy>KVM-GetTargetCreds</Policy>
+    </Policies>
+    <ProxyEndpoints>
+        <ProxyEndpoint>default</ProxyEndpoint>
+    </ProxyEndpoints>
+    <Resources>
+        <Resource>jsc://TargetPath.js</Resource>
+    </Resources>
+    <Spec></Spec>
+    <TargetServers/>
+    <TargetEndpoints>
+        <TargetEndpoint>basic-auth</TargetEndpoint>
+        <TargetEndpoint>default</TargetEndpoint>
+    </TargetEndpoints>
+    <validate>false</validate>
+</APIProxy>

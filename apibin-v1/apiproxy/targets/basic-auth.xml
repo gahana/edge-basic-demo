@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<TargetEndpoint name="basic-auth">
+    <Description/>
+    <FaultRules/>
+    <PreFlow name="PreFlow">
+        <Request>
+            <Step>
+                <Name>KVM-GetTargetCreds</Name>
+            </Step>
+            <Step>
+                <Name>BA-TargetAuthN</Name>
+            </Step>
+        </Request>
+        <Response/>
+    </PreFlow>
+    <PostFlow name="PostFlow">
+        <Request>
+            <Step>
+                <Name>JS-TargetPath</Name>
+            </Step>
+        </Request>
+        <Response/>
+    </PostFlow>
+    <Flows/>
+    <HTTPTargetConnection>
+        <LoadBalancer>
+            <Server name="demo-target"/>
+        </LoadBalancer>
+        <Path>/basic-auth/{private.creds.username}/{private.creds.password}</Path>
+    </HTTPTargetConnection>
+</TargetEndpoint>
