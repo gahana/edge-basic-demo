@@ -41,7 +41,7 @@ The code in this repo is in an intermediate state (upto step 5 below) to help wi
 
 1. Create a reverse proxy with taget as http://httpbin.org
 
-2. Test APIs like `https://srinis-test.apigee.net/v1/apibin/ip`, `https://srinis-test.apigee.net/v1/apibin/get`, `https://srinis-test.apigee.net/v1/apibin/headers`, `https://srinis-test.apigee.net/v1/apibin/basic-auth/:user/:passwd`
+2. Test APIs like `https://org-test.apigee.net/v1/apibin/ip`, `https://org-test.apigee.net/v1/apibin/get`, `https://org-test.apigee.net/v1/apibin/headers`, `https://org-test.apigee.net/v1/apibin/basic-auth/:user/:passwd`
 
 3. Create a target server for env `demo-target` pointing to `httpbin.org` on port 80
 
@@ -58,11 +58,84 @@ The code in this repo is in an intermediate state (upto step 5 below) to help wi
 
 5. Implement basic authentication using /basic-auth/:username/:password path suffix.
 - Create a KVM entry with username and password
+- Create a new target endpoint
+
+```xml
+<TargetEndpoint name="basic-auth">
+    <Description/>
+    <FaultRules/>
+    <PreFlow name="PreFlow"/>
+    <PostFlow name="PostFlow"/>
+    <Flows/>
+    <HTTPTargetConnection>
+        <LoadBalancer>
+            <Server name="demo-target"/>
+        </LoadBalancer>
+    </HTTPTargetConnection>
+</TargetEndpoint>
+```
+
 - Create a route rule for `basic-auth` path
+
+```xml
+    <RouteRule name="basic-auth">
+        <TargetEndpoint>basic-auth</TargetEndpoint>
+        <Condition>(proxy.pathsuffix MatchesPath "/basic-auth")</Condition>
+    </RouteRule>
+```
+
 - In the proxy read KVM values
+
+```xml
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<KeyValueMapOperations async="false" continueOnError="false" enabled="true" name="KVM-GetTargetCreds" mapIdentifier="httpbin">
+    <DisplayName>KVM-GetTargetCreds</DisplayName>
+    <Get assignTo="private.creds.username" index="1">
+        <Key>
+            <Parameter>username</Parameter>
+        </Key>
+    </Get>
+    <Get assignTo="private.creds.password" index="1">
+        <Key>
+            <Parameter>password</Parameter>
+        </Key>
+    </Get>
+    <Scope>environment</Scope>
+</KeyValueMapOperations>
+```
+
 - Update target request with username and password as basic authentication header
+
+```xml
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<BasicAuthentication async="false" continueOnError="false" enabled="true" name="BA-TargetAuthN">
+    <DisplayName>BA-TargetAuthN</DisplayName>
+    <Operation>Encode</Operation>
+    <IgnoreUnresolvedVariables>false</IgnoreUnresolvedVariables>
+    <User ref="private.creds.username"/>
+    <Password ref="private.creds.password"/>
+    <AssignTo createNew="false">request.header.Authorization</AssignTo>
+</BasicAuthentication>
+```
+
 - Update target path with username and password variables
+
+```xml
+    <HTTPTargetConnection>
+        <LoadBalancer>
+            <Server name="demo-target"/>
+        </LoadBalancer>
+        <Path>/basic-auth/{private.creds.username}/{private.creds.password}</Path>
+    </HTTPTargetConnection>
+```
+
 - Add JavaScript policy to not add path suffix to target URL
+
+```javascript
+context.setVariable("target.copy.pathsuffix", false);
+context.setVariable("target.copy.queryparams", false);
+```
+
 
 6. Move KVM extraction and basic authentication header update to a shared flow
 
